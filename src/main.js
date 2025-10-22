@@ -135,9 +135,13 @@ async function main() {
                     const li = document.createElement('li');
                     li.innerHTML = `
                         <div class="result-item">
-                            <span class="rpi-number">${reg.rpi}</span>
-                            <span class="rpi-description">${reg.descricao}</span>
-                            <button class="copy-btn" onclick="copyToClipboard('${reg.rpi}')">📋</button>
+                            <div class="registro-info">
+                                <strong>Processo:</strong> ${reg.processo || 'N/A'}<br>
+                                <strong>Titular:</strong> ${reg.titular || 'N/A'}<br>
+                                <strong>NCL:</strong> ${reg.ncl || 'N/A'}<br>
+                                <strong>Especificação:</strong> ${reg.especificacao || 'N/A'}
+                            </div>
+                            <button class="copy-btn" onclick="copyToClipboard('${reg.processo}')">📋</button>
                         </div>
                     `;
                     resultsList.appendChild(li);
@@ -148,12 +152,55 @@ async function main() {
             }
         }
 
+        function copyToClipboard(texto) {
+            navigator.clipboard.writeText(texto).then(() => {
+                showFeedback('Copiado para a área de transferência!');
+                setTimeout(hideFeedback, 2000);
+            }).catch(err => {
+                console.error('Erro ao copiar:', err);
+                showFeedback('Erro ao copiar para a área de transferência', true);
+                setTimeout(hideFeedback, 3000);
+            });
+        }
+
         function copyAllResults() {
-            // Implementação da cópia
+            if (!currentResults || currentResults.length === 0) {
+                showFeedback('Nenhum resultado para copiar', true);
+                setTimeout(hideFeedback, 3000);
+                return;
+            }
+
+            const texto = currentResults.map(reg => 
+                `Processo: ${reg.processo}\nTitular: ${reg.titular}\nNCL: ${reg.ncl}\nEspecificação: ${reg.especificacao}\n---`
+            ).join('\n');
+
+            copyToClipboard(texto);
         }
 
         function exportResults() {
-            // Implementação da exportação
+            if (!currentResults || currentResults.length === 0) {
+                showFeedback('Nenhum resultado para exportar', true);
+                setTimeout(hideFeedback, 3000);
+                return;
+            }
+
+            const csvContent = 'Processo,Titular,NCL,Especificação\n' + 
+                currentResults.map(reg => 
+                    `"${reg.processo}","${reg.titular}","${reg.ncl}","${reg.especificacao}"`
+                ).join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'registros_rpi.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            showFeedback('Arquivo CSV exportado com sucesso!');
+            setTimeout(hideFeedback, 3000);
         }
 
         function handleDragOver(e) {
@@ -250,10 +297,16 @@ async function main() {
             }
         }
         
+        // Variável global para resultados
+        let currentResults = [];
+        
         // Torna as funções globais para serem acessíveis pelos event listeners
         window.showFeedback = showFeedback;
         window.hideFeedback = hideFeedback;
         window.displayResults = displayResults;
+        window.copyToClipboard = copyToClipboard;
+        window.copyAllResults = copyAllResults;
+        window.exportResults = exportResults;
         window.handleDragOver = handleDragOver;
         window.handleDragLeave = handleDragLeave;
         window.handleDrop = handleDrop;
@@ -264,9 +317,6 @@ async function main() {
     } catch (error) {
         console.error('🔴 [DEBUG] Erro ao inicializar aplicação:', error);
     }
-
-    // Variável global para resultados
-    let currentResults = [];
 }
 
 // Inicia a aplicação
