@@ -207,35 +207,59 @@ main {
 
 /* Results List */
 .results-list {
-    display: grid;
-    gap: 20px;
     list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .results-list li {
     background: white;
     border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    transition: all 0.3s ease;
+    border-radius: 8px;
+    padding: 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
 }
 
 .results-list li:hover {
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transform: translateY(-1px);
 }
 
 .result-item {
     display: flex;
-    justify-content: space-between;
     align-items: flex-start;
-    gap: 20px;
+    gap: 15px;
+    padding: 20px;
+}
+
+.registro-numero {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    color: white;
+    font-weight: bold;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.numero-registro {
+    text-align: center;
+    line-height: 1;
 }
 
 .registro-info {
     flex: 1;
     line-height: 1.6;
+    color: #2d3748;
 }
 
 .registro-info strong {
@@ -356,6 +380,77 @@ main {
 
 .toast-error {
     background: #f56565;
+}
+
+/* Estilos para paginação */
+.pagination-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    padding: 20px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.pagination-info {
+    color: #4a5568;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.pagination-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.pagination-btn {
+    padding: 8px 16px;
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+    background: white;
+    color: #4a5568;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #f7fafc;
+    color: #a0aec0;
+}
+
+.pagination-btn:disabled:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+/* Responsividade para paginação */
+@media (max-width: 768px) {
+    .pagination-controls {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .pagination-buttons {
+        justify-content: center;
+    }
 }
 
 /* Responsive Design */

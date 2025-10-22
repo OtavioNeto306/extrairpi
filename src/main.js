@@ -128,27 +128,85 @@ async function main() {
 
         function displayResults(results) {
             currentResults = results;
+            currentPage = 1; // Reset para primeira página
+            renderCurrentPage();
+        }
+
+        function renderCurrentPage() {
             resultsList.innerHTML = ''; // Limpa resultados anteriores
 
-            if (results && results.length > 0) {
-                results.forEach(reg => {
+            if (currentResults && currentResults.length > 0) {
+                // Calcula índices da página atual
+                const startIndex = (currentPage - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+                const currentPageResults = currentResults.slice(startIndex, endIndex);
+
+                // Renderiza os registros da página atual
+                currentPageResults.forEach((reg, index) => {
+                    const globalIndex = startIndex + index + 1; // Numeração global
                     const li = document.createElement('li');
                     li.innerHTML = `
                         <div class="result-item">
+                            <div class="registro-numero">
+                                <span class="numero-registro">#${globalIndex}</span>
+                            </div>
                             <div class="registro-info">
                                 <strong>Processo:</strong> ${reg.processo || 'N/A'}<br>
                                 <strong>Titular:</strong> ${reg.titular || 'N/A'}<br>
                                 <strong>NCL:</strong> ${reg.ncl || 'N/A'}<br>
                                 <strong>Especificação:</strong> ${reg.especificacao || 'N/A'}
                             </div>
-                            <button class="copy-btn" onclick="copyToClipboard('${reg.processo}')">📋</button>
+                            <button class="copy-btn" onclick="copyToClipboard('Processo: ${reg.processo}\\nTitular: ${reg.titular}\\nNCL: ${reg.ncl}\\nEspecificação: ${reg.especificacao}')">📋</button>
                         </div>
                     `;
                     resultsList.appendChild(li);
                 });
+
+                // Renderiza controles de paginação
+                renderPaginationControls();
                 containerResultados.classList.remove('hidden');
             } else {
                 containerResultados.classList.add('hidden');
+            }
+        }
+
+        function renderPaginationControls() {
+            const totalPages = Math.ceil(currentResults.length / itemsPerPage);
+            
+            // Remove controles existentes
+            const existingPagination = document.querySelector('.pagination-controls');
+            if (existingPagination) {
+                existingPagination.remove();
+            }
+
+            // Só mostra paginação se houver mais de uma página
+            if (totalPages > 1) {
+                const paginationDiv = document.createElement('div');
+                paginationDiv.className = 'pagination-controls';
+                
+                paginationDiv.innerHTML = `
+                    <div class="pagination-info">
+                        <span>Página ${currentPage} de ${totalPages} (${currentResults.length} registros)</span>
+                    </div>
+                    <div class="pagination-buttons">
+                        <button class="pagination-btn" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
+                            ← Anterior
+                        </button>
+                        <button class="pagination-btn" onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
+                            Próximo →
+                        </button>
+                    </div>
+                `;
+                
+                containerResultados.appendChild(paginationDiv);
+            }
+        }
+
+        function goToPage(page) {
+            const totalPages = Math.ceil(currentResults.length / itemsPerPage);
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                renderCurrentPage();
             }
         }
 
@@ -300,6 +358,10 @@ async function main() {
         // Variável global para resultados
         let currentResults = [];
         
+        // Variáveis de paginação
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        
         // Torna as funções globais para serem acessíveis pelos event listeners
         window.showFeedback = showFeedback;
         window.hideFeedback = hideFeedback;
@@ -313,6 +375,7 @@ async function main() {
         window.handleFileSelect = handleFileSelect;
         window.selecionarEProcessarArquivo = selecionarEProcessarArquivo;
         window.handleFile = handleFile;
+        window.goToPage = goToPage;
         
     } catch (error) {
         console.error('🔴 [DEBUG] Erro ao inicializar aplicação:', error);
