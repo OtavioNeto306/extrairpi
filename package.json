@@ -1,0 +1,21 @@
+{
+  "name": "extrator-rpi",
+  "version": "0.1.0",
+  "description": "Extrator de deferimentos de RPI de arquivos PDF",
+  "main": "src/main.js",
+  "scripts": {
+    "dev": "cargo tauri dev",
+    "build": "cargo tauri build"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.9.0"
+  },
+  "keywords": [
+    "tauri",
+    "pdf",
+    "extractor",
+    "rpi"
+  ],
+  "author": "Extrator RPI",
+  "license": "MIT"
+}

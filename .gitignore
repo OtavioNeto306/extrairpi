@@ -1,0 +1,56 @@
+# Arquivos de ambiente
+.env
+.env.local
+.env.production
+
+# Diretórios de build
+/target
+/dist
+/build
+
+# Arquivos de dependências
+node_modules/
+Cargo.lock
+
+# Arquivos temporários
+*.tmp
+*.temp
+/temp/
+/tmp/
+
+# Logs
+*.log
+logs/
+
+# Arquivos de backup
+*.bak
+*.backup
+/backups/
+
+# Arquivos de cache
+.cache/
+*.cache
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Arquivos de teste
+/test-files/
+*.pdf
+
+# Arquivos de saída
+/output/
+/exports/
+
+# Arquivos específicos do Tauri
+src-tauri/target/
+src-tauri/Cargo.lock
